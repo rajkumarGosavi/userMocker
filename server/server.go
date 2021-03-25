@@ -9,6 +9,7 @@ import (
 	"userMocker/core"
 )
 
+// Server - defines the server type
 type Server struct {
 	users []*core.User
 	Port  uint32
@@ -16,6 +17,7 @@ type Server struct {
 	core.UnimplementedUsersGetterServer
 }
 
+// GetUser - Will get a particular user from the users list according to their id
 func (s *Server) GetUser(ctx context.Context, request *core.SingleUserRequest) (*core.SingleUserResponse, error) {
 	u := &core.User{}
 	for _, usr := range s.users {
@@ -26,6 +28,8 @@ func (s *Server) GetUser(ctx context.Context, request *core.SingleUserRequest) (
 	}
 	return &core.SingleUserResponse{User: &core.User{}}, nil
 }
+
+// GetUsers - Will get users from the users list according to their ids
 func (s *Server) GetUsers(ctx context.Context, request *core.UsersRequest) (*core.UsersResponse, error) {
 	u := make([]*core.User, 0)
 	for _, id := range request.Id {
@@ -38,6 +42,7 @@ func (s *Server) GetUsers(ctx context.Context, request *core.UsersRequest) (*cor
 	return &core.UsersResponse{User: u}, nil
 }
 
+// InitServer - initializes a server for grpc and adds users data to server itself
 func InitServer(lis *net.Listener) (Server, error) {
 	port := uint32((*lis).Addr().(*net.TCPAddr).Port)
 	temp := []*core.User{}
