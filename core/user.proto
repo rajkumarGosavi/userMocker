@@ -3,7 +3,7 @@ syntax = "proto3";
 option go_package = "./core";
 
 message User {
-  int32 id = 1;
+  uint32 id = 1;
   string fname = 2;
   string city = 3;
   uint64 phone = 4;
@@ -12,18 +12,25 @@ message User {
 }
 
 message SingleUserRequest {
-  int32 id = 1;
+  uint32 id = 1;
 }
 
 message UsersRequest {
-  repeated int32 id = 1;
+  repeated uint32 id = 1;
 }
 
-message Response {
+message UsersResponse {
   repeated User user = 1;
 }
 
+message SingleUserResponse {
+  User user = 1;
+}
+
 service UserGetter {
-  rpc GetUser (SingleUserRequest) returns (Response);
-  rpc GetUsers (UsersRequest) returns (Response);
+  rpc GetUser (SingleUserRequest) returns (SingleUserResponse);
+}
+
+service UsersGetter {
+  rpc GetUsers (UsersRequest) returns (UsersResponse);
 }

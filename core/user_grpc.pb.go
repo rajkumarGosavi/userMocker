@@ -18,8 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserGetterClient interface {
-	GetUser(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*Response, error)
-	GetUsers(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*Response, error)
+	GetUser(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error)
 }
 
 type userGetterClient struct {
@@ -30,18 +29,9 @@ func NewUserGetterClient(cc grpc.ClientConnInterface) UserGetterClient {
 	return &userGetterClient{cc}
 }
 
-func (c *userGetterClient) GetUser(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
+func (c *userGetterClient) GetUser(ctx context.Context, in *SingleUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error) {
+	out := new(SingleUserResponse)
 	err := c.cc.Invoke(ctx, "/UserGetter/GetUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userGetterClient) GetUsers(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
-	err := c.cc.Invoke(ctx, "/UserGetter/GetUsers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -52,8 +42,7 @@ func (c *userGetterClient) GetUsers(ctx context.Context, in *UsersRequest, opts 
 // All implementations must embed UnimplementedUserGetterServer
 // for forward compatibility
 type UserGetterServer interface {
-	GetUser(context.Context, *SingleUserRequest) (*Response, error)
-	GetUsers(context.Context, *UsersRequest) (*Response, error)
+	GetUser(context.Context, *SingleUserRequest) (*SingleUserResponse, error)
 	mustEmbedUnimplementedUserGetterServer()
 }
 
@@ -61,11 +50,8 @@ type UserGetterServer interface {
 type UnimplementedUserGetterServer struct {
 }
 
-func (UnimplementedUserGetterServer) GetUser(context.Context, *SingleUserRequest) (*Response, error) {
+func (UnimplementedUserGetterServer) GetUser(context.Context, *SingleUserRequest) (*SingleUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
-}
-func (UnimplementedUserGetterServer) GetUsers(context.Context, *UsersRequest) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
 func (UnimplementedUserGetterServer) mustEmbedUnimplementedUserGetterServer() {}
 
@@ -98,24 +84,6 @@ func _UserGetter_GetUser_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserGetter_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UsersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserGetterServer).GetUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/UserGetter/GetUsers",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserGetterServer).GetUsers(ctx, req.(*UsersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UserGetter_ServiceDesc is the grpc.ServiceDesc for UserGetter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -127,9 +95,91 @@ var UserGetter_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetUser",
 			Handler:    _UserGetter_GetUser_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "core/user.proto",
+}
+
+// UsersGetterClient is the client API for UsersGetter service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type UsersGetterClient interface {
+	GetUsers(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*UsersResponse, error)
+}
+
+type usersGetterClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUsersGetterClient(cc grpc.ClientConnInterface) UsersGetterClient {
+	return &usersGetterClient{cc}
+}
+
+func (c *usersGetterClient) GetUsers(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*UsersResponse, error) {
+	out := new(UsersResponse)
+	err := c.cc.Invoke(ctx, "/UsersGetter/GetUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UsersGetterServer is the server API for UsersGetter service.
+// All implementations must embed UnimplementedUsersGetterServer
+// for forward compatibility
+type UsersGetterServer interface {
+	GetUsers(context.Context, *UsersRequest) (*UsersResponse, error)
+	mustEmbedUnimplementedUsersGetterServer()
+}
+
+// UnimplementedUsersGetterServer must be embedded to have forward compatible implementations.
+type UnimplementedUsersGetterServer struct {
+}
+
+func (UnimplementedUsersGetterServer) GetUsers(context.Context, *UsersRequest) (*UsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
+}
+func (UnimplementedUsersGetterServer) mustEmbedUnimplementedUsersGetterServer() {}
+
+// UnsafeUsersGetterServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UsersGetterServer will
+// result in compilation errors.
+type UnsafeUsersGetterServer interface {
+	mustEmbedUnimplementedUsersGetterServer()
+}
+
+func RegisterUsersGetterServer(s grpc.ServiceRegistrar, srv UsersGetterServer) {
+	s.RegisterService(&UsersGetter_ServiceDesc, srv)
+}
+
+func _UsersGetter_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersGetterServer).GetUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/UsersGetter/GetUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersGetterServer).GetUsers(ctx, req.(*UsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UsersGetter_ServiceDesc is the grpc.ServiceDesc for UsersGetter service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UsersGetter_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "UsersGetter",
+	HandlerType: (*UsersGetterServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetUsers",
-			Handler:    _UserGetter_GetUsers_Handler,
+			Handler:    _UsersGetter_GetUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
