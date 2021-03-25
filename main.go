@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize GRPC server %v", err)
 	}
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer([]grpc.ServerOption{}...)
 	core.RegisterUserGetterServer(grpcServer, &s)
 	core.RegisterUsersGetterServer(grpcServer, &s)
 	log.Printf("Initialized GRPC Server, listening on %d ", port)
