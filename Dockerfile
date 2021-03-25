@@ -9,7 +9,11 @@ RUN git config --global url."https://${GIT_ACCESS_TOKEN}@github.com".insteadOf "
 
 ADD . /go/src/rajkumarGosavi/userMocker
 
-RUN cd /go/src/rajkumarGosavi/userMocker && go install 
+RUN cd /go/src/rajkumarGosavi/userMocker
+
+RUN go mod download
+
+RUN go install 
 
 ENTRYPOINT ["/go/bin/userMocker"]
 
