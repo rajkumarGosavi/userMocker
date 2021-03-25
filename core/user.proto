@@ -15,20 +15,21 @@ message SingleUserRequest {
   uint32 id = 1;
 }
 
-message UsersRequest {
-  repeated uint32 id = 1;
-}
-
-message UsersResponse {
-  repeated User user = 1;
-}
-
 message SingleUserResponse {
   User user = 1;
 }
 
 service UserGetter {
   rpc GetUser (SingleUserRequest) returns (SingleUserResponse);
+}
+
+
+message UsersRequest {
+  repeated uint32 id = 1;
+}
+
+message UsersResponse {
+  repeated User user = 1;
 }
 
 service UsersGetter {
