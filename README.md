@@ -6,7 +6,7 @@ This is a simple GRPC application that mocks user database using a simple variab
 
 - Download Code zip.
 - Execute `make dock-build` to build the image..
-- Execute `sudo docker run -p 9090:9090 -t userMocker` to run the docker file and start the server.
+- Execute `sudo docker run -p 9090:9090 -t usermocker` to run the docker file and start the server.
 - Now the server should be running on port _9090_ .
 - One can now send request using the client.
 - Execute `make build-client` to build the client binary.
