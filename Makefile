@@ -15,6 +15,6 @@ build-client:
 	mv client/clientBin clientBin
 
 dock-build:
-	sudo docker build --build-arg GIT_ACCESS_TOKEN=[e5c798426f2ec39c989886c1b3c70f606831b9cd] -t userMocker .
+	sudo docker build --build-arg GIT_ACCESS_TOKEN=[e5c798426f2ec39c989886c1b3c70f606831b9cd] -t usermocker .
 dock-run:
-	sudo docker run -p 9090:9090 -t userMocker
+	sudo docker run -p 9090:9090 -t usermocker
